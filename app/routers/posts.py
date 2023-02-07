@@ -37,9 +37,9 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), current
 def get_post(id:int, db: Session = Depends(get_db)):
     # cursor.execute("""SELECT * FROM posts WHERE id=%s; """, (str(id)))
     # post = cursor.fetchone()
-    post = db.query(func.sum(models.Vote.vote).label("votes")).join(
-        models.Vote, models.Vote.post_id == models.Post.id, isouter = True).group_by(
-        models.Post.id).filter(models.Post.id == id).first()
+    post = db.query(models.Post, func.sum(models.Vote.direction).label("Vote")).join(
+        models.Vote, models.Vote.post_id==models.Post.id, isouter=True).group_by(
+        models.Post.id, models.Vote.post_id).filter(models.Post.id==id).first()
     ###post = db.query(models.Post, func.sum(models.Vote.vote).label("votes")).group_by(models.Post.id).first()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
