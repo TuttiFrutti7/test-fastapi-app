@@ -4,6 +4,7 @@ from pydantic.types import conint
 from datetime import datetime
 
 
+
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
@@ -40,12 +41,32 @@ class PostResponse(PostBase):
     class Config:
         orm_mode = True
 
+
+
+# class Vote(BaseModel):
+    # post_id: int
+    # dir: conint(le=1, ge=-1)
+
+# class PostVote(BaseModel):
+    # Post: PostResponse
+    # votes: int
+
+    # class Config:
+        # orm_mode = True
+
+
+class Vote(BaseModel):
+    post_id: int
+    dir: conint(le=1, ge=-1)
+
 class PostVote(BaseModel):
     Post: PostResponse
-    votes: int
+    Vote: Optional[int]
 
     class Config:
         orm_mode = True
+
+
 
 
 class Token(BaseModel):
@@ -54,9 +75,3 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str] = None
-
-
-
-class Vote(BaseModel):
-    post_id: int
-    dir: conint(le=1, ge=0)
